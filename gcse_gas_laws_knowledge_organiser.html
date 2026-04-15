@@ -1,0 +1,515 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{max-width:860px;margin:0 auto;padding:1rem 0}
+.page{display:none}
+.page.active{display:block}
+h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.subtitle{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px}
+.nav-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.nav-btn{padding:6px 14px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer}
+.nav-btn.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.card-blue{border-left:3px solid #378ADD;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card-teal{border-left:3px solid #1D9E75;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card-purple{border-left:3px solid #7F77DD;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card-amber{border-left:3px solid #BA7517;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card-coral{border-left:3px solid #D85A30;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.badge{display:inline-block;padding:2px 10px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;margin-bottom:8px}
+.badge-blue{background:#E6F1FB;color:#0C447C}
+.badge-teal{background:#E1F5EE;color:#085041}
+.badge-purple{background:#EEEDFE;color:#3C3489}
+.badge-amber{background:#FAEEDA;color:#633806}
+.badge-coral{background:#FAECE7;color:#712B13}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.formula-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:15px;font-weight:500;color:var(--color-text-primary);text-align:center;margin:8px 0}
+.key-eq{font-size:17px;font-weight:500}
+.row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.term{font-weight:500;font-size:14px;min-width:140px;color:var(--color-text-primary)}
+.def{font-size:14px;color:var(--color-text-secondary);line-height:1.5}
+.sa-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px}
+.sa-statement{font-size:15px;color:var(--color-text-primary);margin-bottom:12px;line-height:1.6}
+.sa-buttons{display:flex;gap:8px}
+.sa-btn{padding:7px 20px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer}
+.sa-btn:hover{background:var(--color-background-secondary);opacity:0.8}
+.sa-btn.green{background:#EAF3DE;color:#27500A;border-color:#639922}
+.sa-btn.amber2{background:#FAEEDA;color:#633806;border-color:#BA7517}
+.sa-btn.red{background:#FCEBEB;color:#791F1F;border-color:#A32D2D}
+.sa-btn.selected-green{background:#639922;color:#fff;border-color:#639922}
+.sa-btn.selected-amber2{background:#BA7517;color:#fff;border-color:#BA7517}
+.sa-btn.selected-red{background:#A32D2D;color:#fff;border-color:#A32D2D}
+.q-block{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:14px}
+.q-text{font-size:15px;color:var(--color-text-primary);margin-bottom:12px;line-height:1.6}
+.q-marks{font-size:12px;color:var(--color-text-secondary);float:right}
+.opt-btn{display:block;width:100%;text-align:left;padding:8px 14px;margin-bottom:6px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer}
+.opt-btn:hover{background:var(--color-background-tertiary)}
+.opt-btn.correct{background:#EAF3DE;color:#27500A;border-color:#639922}
+.opt-btn.wrong{background:#FCEBEB;color:#791F1F;border-color:#A32D2D}
+.opt-btn.reveal-correct{background:#EAF3DE;color:#27500A;border-color:#639922}
+.feedback{font-size:13px;margin-top:8px;padding:8px 12px;border-radius:var(--border-radius-md);line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#EAF3DE;color:#27500A}
+.feedback.wrong{background:#FCEBEB;color:#791F1F}
+.calc-q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:14px}
+.calc-input{width:100%;padding:8px 12px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);margin:8px 0}
+.check-btn{padding:7px 20px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer}
+.action-btn{padding:9px 24px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);cursor:pointer;font-weight:500}
+.section-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;margin-top:18px}
+.score-circle{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:500;margin:0 auto 12px;border:3px solid}
+.topic-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.topic-row:last-child{border-bottom:none}
+.topic-label{font-size:14px;color:var(--color-text-primary)}
+.pill{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500}
+.pill-green{background:#EAF3DE;color:#27500A}
+.pill-amber{background:#FAEEDA;color:#633806}
+.pill-red{background:#FCEBEB;color:#791F1F}
+.progress-bar-wrap{height:6px;background:var(--color-background-secondary);border-radius:3px;margin:4px 0 12px}
+.progress-bar{height:6px;border-radius:3px;transition:width 0.5s}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr}.nav-bar{gap:6px}}
+</style>
+
+<div class="app">
+<h2 class="sr-only">Pearson Edexcel International GCSE — Gas Laws Knowledge Organiser with self-assessment and diagnostic questions</h2>
+
+<div class="nav-bar" id="mainNav">
+  <button class="nav-btn active" onclick="showPage('ko')">Knowledge Organiser</button>
+  <button class="nav-btn" onclick="showPage('sa')">Self-Assessment</button>
+  <button class="nav-btn" onclick="showPage('diag')">Diagnostic Questions</button>
+  <button class="nav-btn" onclick="showPage('calc')">Calculation Practice</button>
+  <button class="nav-btn" onclick="showPage('summary')">My Summary</button>
+</div>
+
+<!-- PAGE 1: KNOWLEDGE ORGANISER -->
+<div class="page active" id="page-ko">
+  <h1>Gas Laws — Knowledge Organiser</h1>
+  <p class="subtitle">Pearson Edexcel International GCSE · Unit 6: Solids, Liquids and Gases</p>
+
+  <div class="section-title">Core concept: kinetic particle theory of gases</div>
+  <div class="card card-blue">
+    <span class="badge badge-blue">Particle model</span>
+    <p style="font-size:14px;color:var(--color-text-secondary);line-height:1.7">Gas particles are in <strong style="color:var(--color-text-primary)">continuous, rapid, random motion</strong>. They are widely spaced with negligible forces between them. When they collide with the walls of a container they exert a <strong style="color:var(--color-text-primary)">force per unit area</strong> — this is <strong style="color:var(--color-text-primary)">pressure</strong>.</p>
+  </div>
+
+  <div class="section-title">Key quantities and units</div>
+  <div class="card">
+    <div class="row"><span class="term">Pressure (P)</span><span class="def">Force exerted by gas particles per unit area on container walls. Unit: <strong>Pa</strong> (pascals) or kPa</span></div>
+    <div class="row"><span class="term">Volume (V)</span><span class="def">Space occupied by the gas. Unit: <strong>m³</strong> or cm³ (1 m³ = 10⁶ cm³)</span></div>
+    <div class="row"><span class="term">Temperature (T)</span><span class="def">Must always be in <strong>Kelvin (K)</strong> for gas law calculations. T(K) = T(°C) + 273</span></div>
+    <div class="row"><span class="term">Amount of gas (n)</span><span class="def">Fixed amount of gas (constant) assumed in these laws</span></div>
+  </div>
+
+  <div class="section-title">The three gas laws</div>
+  <div class="grid3">
+    <div class="card card-teal">
+      <span class="badge badge-teal">Boyle's Law</span>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px">Pressure and volume at <strong style="color:var(--color-text-primary)">constant temperature</strong></p>
+      <div class="formula-box"><span class="key-eq">P₁V₁ = P₂V₂</span></div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">As pressure <b style="color:var(--color-text-primary)">increases</b>, volume <b style="color:var(--color-text-primary)">decreases</b> proportionally. Inverse relationship.</p>
+    </div>
+    <div class="card card-purple">
+      <span class="badge badge-purple">Charles' Law</span>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px">Volume and temperature at <strong style="color:var(--color-text-primary)">constant pressure</strong></p>
+      <div class="formula-box"><span class="key-eq">V₁/T₁ = V₂/T₂</span></div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">As temperature increases, volume <b style="color:var(--color-text-primary)">increases</b> proportionally. Direct relationship.</p>
+    </div>
+    <div class="card card-amber">
+      <span class="badge badge-amber">Pressure Law</span>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px">Pressure and temperature at <strong style="color:var(--color-text-primary)">constant volume</strong></p>
+      <div class="formula-box"><span class="key-eq">P₁/T₁ = P₂/T₂</span></div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">As temperature increases, pressure <b style="color:var(--color-text-primary)">increases</b> proportionally. Direct relationship.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Combined gas law</div>
+  <div class="card card-coral">
+    <span class="badge badge-coral">All three variables change</span>
+    <div class="formula-box" style="font-size:19px"><span class="key-eq">P₁V₁/T₁ = P₂V₂/T₂</span></div>
+    <p style="font-size:14px;color:var(--color-text-secondary);line-height:1.6">Used when pressure, volume <em>and</em> temperature all change. Temperature must be in Kelvin.</p>
+  </div>
+
+  <div class="section-title">Particle explanations — why do the laws work?</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Boyle's Law — particle explanation</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">If volume decreases at constant temperature, the same number of particles occupy a smaller space. Particles hit the walls <b style="color:var(--color-text-primary)">more frequently</b> → greater pressure.</p>
+    </div>
+    <div class="card">
+      <h3>Charles' Law — particle explanation</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">At higher temperature, particles move <b style="color:var(--color-text-primary)">faster</b> and hit walls harder. To keep pressure constant, the volume must expand until collision frequency is restored.</p>
+    </div>
+    <div class="card">
+      <h3>Pressure Law — particle explanation</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">At higher temperature in a fixed volume, particles move faster → hit walls <b style="color:var(--color-text-primary)">harder and more often</b> → pressure increases.</p>
+    </div>
+    <div class="card">
+      <h3>Absolute zero (0 K = −273 °C)</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">The temperature at which gas particles have <b style="color:var(--color-text-primary)">minimum kinetic energy</b>. In theory, gas volume and pressure would reach zero. Cannot go below 0 K.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Temperature conversion — critical rule</div>
+  <div class="card card-blue">
+    <div class="grid2">
+      <div>
+        <div class="formula-box">T(K) = T(°C) + 273</div>
+        <p style="font-size:13px;color:var(--color-text-secondary);text-align:center">°C → Kelvin</p>
+      </div>
+      <div>
+        <div class="formula-box">T(°C) = T(K) − 273</div>
+        <p style="font-size:13px;color:var(--color-text-secondary);text-align:center">Kelvin → °C</p>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#A32D2D;margin-top:8px;font-weight:500">⚠ Always convert °C to K before substituting into any gas law equation.</p>
+  </div>
+
+  <div class="section-title">Key graphs to know</div>
+  <div class="grid3">
+    <div class="card" style="text-align:center">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">P vs V (constant T)</p>
+      <svg viewBox="0 0 120 90" width="100%" style="max-width:120px;margin:0 auto;display:block">
+        <path d="M15,75 Q30,20 105,10" stroke="#378ADD" stroke-width="2" fill="none"/>
+        <line x1="10" y1="80" x2="115" y2="80" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <line x1="10" y1="80" x2="10" y2="5" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <text x="60" y="89" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">V</text>
+        <text x="4" y="44" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">P</text>
+      </svg>
+      <p style="font-size:12px;color:var(--color-text-secondary)">Hyperbola (inverse)</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">V vs T/K (constant P)</p>
+      <svg viewBox="0 0 120 90" width="100%" style="max-width:120px;margin:0 auto;display:block">
+        <line x1="20" y1="75" x2="105" y2="15" stroke="#7F77DD" stroke-width="2"/>
+        <line x1="10" y1="80" x2="115" y2="80" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <line x1="10" y1="80" x2="10" y2="5" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <text x="60" y="89" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">T (K)</text>
+        <text x="4" y="44" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">V</text>
+      </svg>
+      <p style="font-size:12px;color:var(--color-text-secondary)">Straight line through origin</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">P vs T/K (constant V)</p>
+      <svg viewBox="0 0 120 90" width="100%" style="max-width:120px;margin:0 auto;display:block">
+        <line x1="20" y1="75" x2="105" y2="15" stroke="#BA7517" stroke-width="2"/>
+        <line x1="10" y1="80" x2="115" y2="80" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <line x1="10" y1="80" x2="10" y2="5" stroke="var(--color-text-secondary)" stroke-width="1"/>
+        <text x="60" y="89" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">T (K)</text>
+        <text x="4" y="44" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">P</text>
+      </svg>
+      <p style="font-size:12px;color:var(--color-text-secondary)">Straight line through origin</p>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <button class="action-btn" onclick="showPage('sa')">Go to Self-Assessment ↗</button>
+  </div>
+</div>
+
+<!-- PAGE 2: SELF ASSESSMENT -->
+<div class="page" id="page-sa">
+  <h1>Self-Assessment</h1>
+  <p class="subtitle">Rate your confidence on each statement: Green = confident · Amber = unsure · Red = not yet</p>
+
+  <div id="sa-items"></div>
+
+  <div style="text-align:center;margin-top:16px">
+    <button class="action-btn" onclick="saveSA()">Save & View Results ↗</button>
+  </div>
+</div>
+
+<!-- PAGE 3: DIAGNOSTIC QUESTIONS -->
+<div class="page" id="page-diag">
+  <h1>Diagnostic Questions</h1>
+  <p class="subtitle">Multiple-choice questions covering all gas law content. Select your answer to get instant feedback.</p>
+  <div id="diag-items"></div>
+  <div style="text-align:center;margin-top:16px">
+    <button class="action-btn" onclick="showPage('calc')">Calculation Practice ↗</button>
+  </div>
+</div>
+
+<!-- PAGE 4: CALCULATION QUESTIONS -->
+<div class="page" id="page-calc">
+  <h1>Calculation Practice</h1>
+  <p class="subtitle">Type your numerical answer and check it. Show your working on paper first.</p>
+  <div id="calc-items"></div>
+  <div style="text-align:center;margin-top:16px">
+    <button class="action-btn" onclick="buildSummary();showPage('summary')">View My Summary ↗</button>
+  </div>
+</div>
+
+<!-- PAGE 5: SUMMARY -->
+<div class="page" id="page-summary">
+  <h1>My Summary</h1>
+  <p class="subtitle">Based on your self-assessment and question responses</p>
+  <div id="summary-content"></div>
+</div>
+</div>
+
+<script>
+const saStatements = [
+  {id:'sa1', topic:'Units', text:'I can state the correct units for pressure (Pa), volume (m³) and temperature (K).'},
+  {id:'sa2', topic:'Conversion', text:'I can convert temperatures between °C and Kelvin using T(K) = T(°C) + 273.'},
+  {id:'sa3', topic:'Boyle', text:'I can state Boyle\'s Law: at constant temperature, pressure and volume are inversely proportional (P₁V₁ = P₂V₂).'},
+  {id:'sa4', topic:'Charles', text:'I can state Charles\' Law: at constant pressure, volume is directly proportional to absolute temperature (V₁/T₁ = V₂/T₂).'},
+  {id:'sa5', topic:'Pressure Law', text:'I can state the Pressure Law: at constant volume, pressure is directly proportional to absolute temperature (P₁/T₁ = P₂/T₂).'},
+  {id:'sa6', topic:'Combined', text:'I can use the combined gas law equation P₁V₁/T₁ = P₂V₂/T₂.'},
+  {id:'sa7', topic:'Particle — Boyle', text:'I can explain Boyle\'s Law using particle theory (smaller volume → more frequent collisions → higher pressure).'},
+  {id:'sa8', topic:'Particle — Charles', text:'I can explain Charles\' Law using particle theory (higher T → faster particles → volume must increase to keep pressure constant).'},
+  {id:'sa9', topic:'Particle — Pressure', text:'I can explain the Pressure Law using particle theory (higher T → faster particles → harder/more frequent collisions → higher pressure).'},
+  {id:'sa10', topic:'Graphs', text:'I can sketch and interpret graphs: P vs V (hyperbola), V vs T/K (straight line through origin), P vs T/K (straight line through origin).'},
+  {id:'sa11', topic:'Absolute zero', text:'I can define absolute zero (0 K / −273 °C) as the temperature at which gas particles have minimum kinetic energy.'},
+  {id:'sa12', topic:'Calculations', text:'I can rearrange and apply all three gas law equations to solve numerical problems, including converting units correctly.'},
+];
+
+const diagQs = [
+  {id:'d1',topic:'Conversion',q:'A gas is at 27 °C. What is this temperature in Kelvin?',opts:['27 K','246 K','300 K','573 K'],correct:2,explain:'T(K) = 27 + 273 = 300 K. Always add 273 to convert from °C to Kelvin.'},
+  {id:'d2',topic:'Boyle',q:'Which statement correctly describes Boyle\'s Law?',opts:['Pressure is directly proportional to temperature at constant volume','Volume is directly proportional to temperature at constant pressure','Pressure is inversely proportional to volume at constant temperature','Pressure is inversely proportional to temperature at constant volume'],correct:2,explain:'Boyle\'s Law states that at constant temperature, pressure × volume = constant (inverse relationship).'},
+  {id:'d3',topic:'Units',q:'Which of the following is the correct SI unit for pressure?',opts:['°C','m³','Pa','mol'],correct:2,explain:'Pa (pascal) is the SI unit of pressure. 1 Pa = 1 N/m².'},
+  {id:'d4',topic:'Particle — Boyle',q:'A gas is compressed at constant temperature. What happens to the collision rate with the container walls?',opts:['It decreases','It stays the same','It increases','It becomes zero'],correct:2,explain:'Smaller volume means particles travel less distance between collisions with the walls, so they collide more frequently → higher pressure.'},
+  {id:'d5',topic:'Graphs',q:'A graph of volume (y-axis) against temperature in Kelvin (x-axis) at constant pressure produces which shape?',opts:['A hyperbola','A straight line through the origin','A horizontal line','A curved line that flattens out'],correct:1,explain:'Charles\' Law gives V ∝ T (at constant P), which produces a straight line through the origin when T is in Kelvin.'},
+  {id:'d6',topic:'Absolute zero',q:'What is absolute zero in degrees Celsius?',opts:['0 °C','−100 °C','−173 °C','−273 °C'],correct:3,explain:'Absolute zero is 0 K = −273 °C. It is the lowest possible temperature.'},
+  {id:'d7',topic:'Pressure Law',q:'A sealed, rigid container of gas is heated. What happens to the pressure inside?',opts:['Pressure decreases','Pressure stays the same','Pressure increases','Pressure becomes zero'],correct:2,explain:'At constant volume, increasing temperature means particles move faster → more frequent and harder collisions with walls → pressure increases (Pressure Law).'},
+  {id:'d8',topic:'Charles', q:'A gas occupies 2.0 L at 300 K. The temperature rises to 600 K at constant pressure. What is the new volume?',opts:['1.0 L','2.0 L','4.0 L','6.0 L'],correct:2,explain:'V₁/T₁ = V₂/T₂ → V₂ = V₁ × T₂/T₁ = 2.0 × 600/300 = 4.0 L.'},
+  {id:'d9',topic:'Particle — Charles',q:'Why does the volume of a gas increase when heated at constant pressure?',opts:['Particles get larger','Particles move faster and push walls outward until collision rate returns to original value','Particles escape through the walls','Mass of gas increases'],correct:1,explain:'Faster-moving particles initially hit walls harder, increasing pressure. The volume then expands until the collision rate drops back to give the original pressure.'},
+  {id:'d10',topic:'Combined',q:'Which equation represents the combined gas law?',opts:['P₁V₁ = P₂V₂','V₁/T₁ = V₂/T₂','P₁V₁/T₁ = P₂V₂/T₂','P₁/T₁ = P₂/T₂'],correct:2,explain:'The combined gas law links all three variables: P₁V₁/T₁ = P₂V₂/T₂, where T must be in Kelvin.'},
+];
+
+const calcQs = [
+  {id:'c1',topic:'Boyle',q:'A gas has a pressure of 100 kPa and a volume of 4.0 m³ at constant temperature. The volume is reduced to 2.0 m³. Calculate the new pressure in kPa.',answer:200,tolerance:1,workings:'P₁V₁ = P₂V₂ → 100 × 4.0 = P₂ × 2.0 → P₂ = 400/2.0 = 200 kPa'},
+  {id:'c2',topic:'Conversion',q:'Convert 127 °C into Kelvin.',answer:400,tolerance:0,workings:'T(K) = 127 + 273 = 400 K'},
+  {id:'c3',topic:'Pressure Law',q:'A gas at 300 K exerts a pressure of 150 kPa in a rigid container. The temperature rises to 450 K. Calculate the new pressure in kPa.',answer:225,tolerance:1,workings:'P₁/T₁ = P₂/T₂ → 150/300 = P₂/450 → P₂ = 150 × 450/300 = 225 kPa'},
+  {id:'c4',topic:'Charles',q:'A gas occupies 6.0 m³ at 200 K. It is heated to 400 K at constant pressure. What is the new volume in m³?',answer:12,tolerance:0.1,workings:'V₁/T₁ = V₂/T₂ → 6.0/200 = V₂/400 → V₂ = 6.0 × 400/200 = 12 m³'},
+  {id:'c5',topic:'Combined',q:'A gas at 300 K, 100 kPa and 5.0 m³ is changed to 600 K and 200 kPa. Calculate the new volume in m³.',answer:5,tolerance:0.1,workings:'P₁V₁/T₁ = P₂V₂/T₂ → (100×5.0)/300 = (200×V₂)/600 → V₂ = (100×5.0×600)/(300×200) = 300000/60000 = 5.0 m³'},
+];
+
+let saScores = {};
+let diagScores = {};
+let calcScores = {};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const map = {ko:0,sa:1,diag:2,calc:3,summary:4};
+  btns[map[id]].classList.add('active');
+}
+
+function buildSA() {
+  const container = document.getElementById('sa-items');
+  container.innerHTML = '';
+  saStatements.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'sa-item';
+    div.innerHTML = `<p class="sa-statement"><span style="font-size:12px;color:var(--color-text-secondary);font-weight:500">${s.topic}</span><br>${s.text}</p>
+    <div class="sa-buttons">
+      <button class="sa-btn green" onclick="setSA('${s.id}','green',this)">Confident</button>
+      <button class="sa-btn amber2" onclick="setSA('${s.id}','amber',this)">Unsure</button>
+      <button class="sa-btn red" onclick="setSA('${s.id}','red',this)">Not yet</button>
+    </div>`;
+    container.appendChild(div);
+  });
+}
+
+function setSA(id, val, btn) {
+  saScores[id] = val;
+  const btns = btn.parentElement.querySelectorAll('button');
+  btns.forEach(b => {
+    b.classList.remove('selected-green','selected-amber2','selected-red');
+    if(b === btn) b.classList.add('selected-'+val);
+  });
+}
+
+function saveSA() {
+  showPage('diag');
+}
+
+function buildDiag() {
+  const container = document.getElementById('diag-items');
+  container.innerHTML = '';
+  diagQs.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.innerHTML = `<p class="q-text"><span style="font-size:12px;color:var(--color-text-secondary);font-weight:500">${q.topic} · Q${i+1}</span><br><br>${q.q}</p>
+    ${q.opts.map((o,j)=>`<button class="opt-btn" onclick="checkDiag('${q.id}',${j},${q.correct},this,'${q.id}-fb')">${String.fromCharCode(65+j)}) ${o}</button>`).join('')}
+    <div class="feedback" id="${q.id}-fb"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkDiag(qid, chosen, correct, btn, fbId) {
+  const btns = btn.parentElement.querySelectorAll('.opt-btn');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById(fbId);
+  fb.classList.add('show');
+  const qData = diagQs.find(q=>q.id===qid);
+  if(chosen === correct) {
+    btn.classList.add('correct');
+    fb.className = 'feedback show correct';
+    fb.textContent = 'Correct! ' + qData.explain;
+    diagScores[qid] = true;
+  } else {
+    btn.classList.add('wrong');
+    btns[correct].classList.add('reveal-correct');
+    fb.className = 'feedback show wrong';
+    fb.textContent = 'Incorrect. ' + qData.explain;
+    diagScores[qid] = false;
+  }
+}
+
+function buildCalc() {
+  const container = document.getElementById('calc-items');
+  container.innerHTML = '';
+  calcQs.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'calc-q';
+    div.innerHTML = `<p style="font-size:12px;color:var(--color-text-secondary);font-weight:500;margin-bottom:6px">${q.topic} · Calculation ${i+1}</p>
+    <p style="font-size:15px;color:var(--color-text-primary);line-height:1.6;margin-bottom:10px">${q.q}</p>
+    <input class="calc-input" type="number" id="calc-${q.id}" placeholder="Type your answer here..." step="any"/>
+    <button class="check-btn" onclick="checkCalc('${q.id}',${q.answer},${q.tolerance},'calc-fb-${q.id}','${q.workings.replace(/'/g,"\\'")}')">Check answer</button>
+    <div class="feedback" id="calc-fb-${q.id}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkCalc(id, answer, tol, fbId, workings) {
+  const inp = document.getElementById('calc-'+id);
+  const val = parseFloat(inp.value);
+  const fb = document.getElementById(fbId);
+  fb.classList.add('show');
+  if(isNaN(val)) { fb.className='feedback show wrong'; fb.textContent='Please enter a number.'; return; }
+  if(Math.abs(val - answer) <= tol) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = `Correct! Answer: ${answer}<br><em style="font-size:12px">${workings}</em>`;
+    calcScores[id] = true;
+    inp.disabled = true;
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = `Not quite. The correct answer is ${answer}.<br><em style="font-size:12px">${workings}</em>`;
+    calcScores[id] = false;
+    inp.disabled = true;
+  }
+}
+
+function buildSummary() {
+  const saTotal = saStatements.length;
+  const saGreen = Object.values(saScores).filter(v=>v==='green').length;
+  const saAmber = Object.values(saScores).filter(v=>v==='amber').length;
+  const saRed = Object.values(saScores).filter(v=>v==='red').length;
+  const diagTotal = diagQs.length;
+  const diagCorrect = Object.values(diagScores).filter(v=>v).length;
+  const calcTotal = calcQs.length;
+  const calcCorrect = Object.values(calcScores).filter(v=>v).length;
+  const totalQ = diagTotal + calcTotal;
+  const totalRight = diagCorrect + calcCorrect;
+  const pct = totalQ > 0 ? Math.round(totalRight/totalQ*100) : 0;
+
+  let circleColor = pct >= 70 ? '#639922' : pct >= 50 ? '#BA7517' : '#A32D2D';
+  let circleLabel = pct >= 70 ? 'Great work!' : pct >= 50 ? 'Keep going!' : 'Needs revision';
+
+  const topicData = [
+    {label:'Units & Definitions', saIds:['sa1'], diagIds:['d3'], calcIds:[]},
+    {label:'Temperature Conversion', saIds:['sa2'], diagIds:['d1'], calcIds:['c2']},
+    {label:'Boyle\'s Law', saIds:['sa3','sa7'], diagIds:['d2','d4'], calcIds:['c1']},
+    {label:'Charles\' Law', saIds:['sa4','sa8'], diagIds:['d5','d8','d9'], calcIds:['c4']},
+    {label:'Pressure Law', saIds:['sa5','sa9'], diagIds:['d7'], calcIds:['c3']},
+    {label:'Combined Gas Law', saIds:['sa6'], diagIds:['d10'], calcIds:['c5']},
+    {label:'Graphs', saIds:['sa10'], diagIds:['d5'], calcIds:[]},
+    {label:'Absolute Zero', saIds:['sa11'], diagIds:['d6'], calcIds:[]},
+  ];
+
+  let topicHTML = '';
+  topicData.forEach(t => {
+    const saRat = t.saIds.map(id=>saScores[id]).filter(Boolean);
+    const diagRat = t.diagIds.map(id=>diagScores[id]).filter(v=>v!==undefined);
+    const calcRat = t.calcIds.map(id=>calcScores[id]).filter(v=>v!==undefined);
+    const allQ = [...diagRat,...calcRat];
+    const qRight = allQ.filter(v=>v).length;
+    const saAvg = saRat.length ? saRat : null;
+    const saConfident = saAvg && saAvg.every(v=>v==='green');
+    const saRed2 = saAvg && saAvg.some(v=>v==='red');
+    let status = 'not assessed';
+    let pillClass = 'pill-amber';
+    if(allQ.length > 0) {
+      const pct2 = Math.round(qRight/allQ.length*100);
+      if(pct2 >= 75) { status = 'Strong'; pillClass = 'pill-green'; }
+      else if(pct2 >= 50) { status = 'Developing'; pillClass = 'pill-amber'; }
+      else { status = 'Needs work'; pillClass = 'pill-red'; }
+    } else if(saConfident) { status = 'Self-confident'; pillClass = 'pill-green'; }
+    else if(saRed2) { status = 'Needs work'; pillClass = 'pill-red'; }
+    topicHTML += `<div class="topic-row"><span class="topic-label">${t.label}</span><span class="pill ${pillClass}">${status}</span></div>`;
+  });
+
+  const knownTopics = topicData.filter(t => {
+    const allQ = [...t.diagIds.map(id=>diagScores[id]),...t.calcIds.map(id=>calcScores[id])].filter(v=>v!==undefined);
+    if(allQ.length) return allQ.filter(v=>v).length/allQ.length >= 0.75;
+    return t.saIds.map(id=>saScores[id]).every(v=>v==='green');
+  }).map(t=>t.label);
+
+  const workOnTopics = topicData.filter(t => {
+    const allQ = [...t.diagIds.map(id=>diagScores[id]),...t.calcIds.map(id=>calcScores[id])].filter(v=>v!==undefined);
+    if(allQ.length) return allQ.filter(v=>v).length/allQ.length < 0.5;
+    return t.saIds.map(id=>saScores[id]).some(v=>v==='red');
+  }).map(t=>t.label);
+
+  const c = document.getElementById('summary-content');
+  c.innerHTML = `
+  <div class="grid3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px">Questions correct</p>
+      <p style="font-size:24px;font-weight:500;color:var(--color-text-primary)">${totalRight}/${totalQ}</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px">Score</p>
+      <p style="font-size:24px;font-weight:500;color:${circleColor}">${pct}%</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px">Overall</p>
+      <p style="font-size:16px;font-weight:500;color:${circleColor}">${circleLabel}</p>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">Self-assessment</p>
+      <p style="font-size:14px;font-weight:500;color:#27500A">${saGreen} confident</p>
+      <p style="font-size:14px;font-weight:500;color:#633806">${saAmber} unsure</p>
+      <p style="font-size:14px;font-weight:500;color:#791F1F">${saRed} not yet</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">Diagnostic MCQ</p>
+      <p style="font-size:22px;font-weight:500;color:var(--color-text-primary)">${diagCorrect}/${diagTotal}</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">Calculations</p>
+      <p style="font-size:22px;font-weight:500;color:var(--color-text-primary)">${calcCorrect}/${calcTotal}</p>
+    </div>
+  </div>
+
+  <div class="section-title">Topic breakdown</div>
+  <div class="card">${topicHTML}</div>
+
+  ${knownTopics.length ? `<div class="card" style="border-left:3px solid #639922;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0;margin-top:12px">
+    <h3 style="color:#27500A;margin-bottom:6px">Topics you know well</h3>
+    <p style="font-size:14px;color:var(--color-text-secondary)">${knownTopics.join(' · ')}</p>
+  </div>` : ''}
+
+  ${workOnTopics.length ? `<div class="card" style="border-left:3px solid #A32D2D;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0;margin-top:12px">
+    <h3 style="color:#791F1F;margin-bottom:6px">Priority areas to revise</h3>
+    <p style="font-size:14px;color:var(--color-text-secondary)">${workOnTopics.join(' · ')}</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-top:8px">Return to the Knowledge Organiser and re-read the relevant sections. Try the questions again after revising.</p>
+  </div>` : ''}
+
+  <div style="text-align:center;margin-top:20px">
+    <button class="action-btn" onclick="showPage('ko')">Review Knowledge Organiser ↗</button>
+  </div>`;
+}
+
+buildSA();
+buildDiag();
+buildCalc();
+</script>
